@@ -1,0 +1,8 @@
+*.md
+*.iml
+build
+.idea
+.gradle
+
+Dockerfile
+.dockerignore

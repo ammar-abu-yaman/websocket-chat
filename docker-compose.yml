@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  web:
+    image: ammarymn/webserver
+    build: ./webserver
+    ports:
+      - 80:80
+
+  frontend:
+    image: ammarymn/frontend
+    build: ./frontend
+    expose:
+      - 3000
+    
+  backend:
+    image: ammarymn/backend
+    build: ./backend
+    expose:
+      - 8080
+
+
