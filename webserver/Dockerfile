@@ -4,4 +4,4 @@ FROM nginx:latest
 RUN apt update
 RUN apt install curl
 
-COPY . /etc/nginx/
+COPY templates/ /etc/nginx/templates

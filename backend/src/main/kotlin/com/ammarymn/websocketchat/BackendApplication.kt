@@ -19,11 +19,3 @@ class Controller {
 	fun endpoint() = "hello world"
 
 }
-
-interface Message {
-	fun message()
-}
-
-class MessageImpl : Message {
-	override fun message() = println("hello world")
-}

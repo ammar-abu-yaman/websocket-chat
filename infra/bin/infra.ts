@@ -4,8 +4,8 @@ import { App, Environment } from 'aws-cdk-lib'
 import { NetworkStack, ServiceStack } from '../lib/stack'
 
 const env: Environment = {
-    account: process.env.ACCOUNT_ID,
-    region: process.env.REGION ?? 'me-south-1',
+    account: '980540535689',// process.env.ACCOUNT_ID,
+    region: 'me-south-1'// process.env.REGION ?? 'me-south-1',
 }
 
 const app = new App();
