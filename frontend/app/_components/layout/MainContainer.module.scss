@@ -1,0 +1,15 @@
+.main-container {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    height: 100rem;
+}
+
+.content-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 80%;
+    height: max(40rem, 100%);
+}

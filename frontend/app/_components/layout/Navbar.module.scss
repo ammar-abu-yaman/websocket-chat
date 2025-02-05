@@ -1,0 +1,12 @@
+@use "styles/theme" as *;
+
+.top-navbar {
+    display: flex;
+    flex-direction: row;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+    margin-bottom: 32px;
+    background-color: $gray-primary-dark;
+    color: white;
+}
