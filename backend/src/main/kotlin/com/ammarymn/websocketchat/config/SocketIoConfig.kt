@@ -5,7 +5,6 @@ import com.corundumstudio.socketio.SocketIOServer
 import lombok.extern.log4j.Log4j2
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.CrossOrigin
 
 @CrossOrigin
@@ -23,9 +22,8 @@ class SocketIOConfig {
         val config = Configuration()
         config.hostname = SOCKET_HOST
         config.port = SOCKET_PORT
-//        config.isEnableCors = true
-//        config.origin = "http://localhost:3000"
-
+        config.isEnableCors = true
+        config.origin = "http://localhost:3000"
         return SocketIOServer(config)
     }
 }

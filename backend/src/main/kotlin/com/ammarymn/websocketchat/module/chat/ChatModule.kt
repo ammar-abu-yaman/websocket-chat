@@ -7,14 +7,16 @@ import com.corundumstudio.socketio.listener.DisconnectListener
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.stereotype.Component
+import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 @Component
 class ChatModule(val server: SocketIOServer) {
 
     private val namespace = server.addNamespace("/chat")
 
-    private val roomsToMessages = ConcurrentHashMap<String, MutableList<String>>()
+    private val roomsToMessages: ConcurrentMap<String, MutableList<Message>> = ConcurrentHashMap()
 
     init {
         namespace.addConnectListener(onConnect())
@@ -23,20 +25,26 @@ class ChatModule(val server: SocketIOServer) {
     }
 
     private fun onConnect() = ConnectListener { client ->
-        val username = client.handshakeData.urlParams["username"]?.getOrNull(0) ?: ""
-        val room = client.handshakeData.urlParams["room"]?.getOrNull(0) ?: ""
-        client.sendEvent("receive-message", Message(
-            username, "Connected using ID: ${client.sessionId}"
-        ))
-        client.sendEvent("current-messages", room)
+        val username = client.handshakeData.getSingleUrlParam("username")
+        val room = client.handshakeData.getSingleUrlParam("room")
+        println("joining $username to $room")
+        client.joinRoom(room)
+        val messages = roomsToMessages.computeIfAbsent(room) { Collections.synchronizedList(ArrayList<Message>()) }
+        client.sendEvent("current-messages", messages)
     }
 
     private fun onDisconnect() = DisconnectListener {}
 
-    private fun onMessageReceived() = DataListener<Message> { client, message, _ ->
-        client.namespace.broadcastOperations.sendEvent("receive-message", client, message)
-    }
+    private fun onMessageReceived() = DataListener<Message> { client, request, _ ->
+        val (username, message) = request
+        val room = client.allRooms.lastOrNull() ?: return@DataListener
+        val roomMessages = roomsToMessages[room] ?: return@DataListener
+        roomMessages.add(Message(username, message))
 
+        client.namespace
+            .getRoomOperations(room)
+            .sendEvent("receive-message", client, Message(username, message))
+    }
 }
 
 data class Message @JsonCreator constructor(
